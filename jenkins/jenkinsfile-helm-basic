@@ -2,9 +2,6 @@ pipeline {
    agent {
        kubernetes{}
    }
-   environment {
-    //    registry = "magalixcorp/k8scicd"
-   }
    stages {
        stage('Build') {
            steps {

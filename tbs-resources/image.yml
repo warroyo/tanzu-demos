@@ -1,0 +1,14 @@
+apiVersion: kpack.io/v1alpha1
+kind: Image
+metadata:
+  name: petclinic
+  namespace: devteam1
+spec:
+  builder:
+    name: full
+    kind: ClusterBuilder
+  tag: dev.registry.pivotal.io/warroyo/petclinic
+  source:
+    git:
+      url: https://github.com/warroyo/spring-petclinic
+      revision: main

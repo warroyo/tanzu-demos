@@ -1,5 +1,7 @@
 pipeline {
-   agent kubernetes
+   agent {
+       kubernetes{}
+   }
    environment {
     //    registry = "magalixcorp/k8scicd"
    }

@@ -3,7 +3,7 @@ pipeline {
        kubernetes {
         label 'helm-basic'  
         idleMinutes 5 
-        yamlFile 'jenkins/build-pod-basic.yaml' 
+        yamlFile 'jenkins/build-pod-basic.yml' 
         defaultContainer 'maven'
       }
    }

@@ -1,6 +1,11 @@
 pipeline {
    agent {
-       kubernetes{}
+       kubernetes {
+        label 'helm-basic'  
+        idleMinutes 5 
+        yamlFile 'jenkins/build-pod.yaml' 
+        defaultContainer 'maven'
+      }
    }
    stages {
        stage('Build') {

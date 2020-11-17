@@ -10,3 +10,5 @@ spec:
       image: dev.registry.pivotal.io/warroyo/jenkins-ci-image
       command: ["tail", "-f", "/dev/null"] 
       imagePullPolicy: Always
+  imagePullSecrets:
+  - name: devregistry

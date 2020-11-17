@@ -13,74 +13,70 @@ pipeline {
    }
    
    stages {
-       stage('Build') {
-           steps {
-               git poll: true,
-                   url: 'https://github.com/warroyo/spring-petclinic',
-                   branch: 'main'
-               container('jdk') {
-                sh 'echo "building code"'
-                sh './mvnw package'
-                }
-           }    
-       }
-        stage('test') {
-           steps {
-               container('jdk') {
-                sh 'echo "running some tests"'
-                sh 'sleep 20'
-                sh 'echo "tests succesfully passed"'
-                }
-           }    
-       }
-       stage('Build Container') {
-           environment {
-            TBS_KUBE = credentials('tbs-kube')
-            TMC_API_TOKEN = credentials('tmc-token')
-            HARBOR_LOGIN = credentials('harbor')
-           }
-           steps {                
-               // Create our project directory.
-               container('jenkins-ci-image'){
-                   sh 'mkdir -p ~/.kube'
-                   sh 'cat $TBS_KUBE > ~/.kube/config'
-                   sh 'mkdir -p ~/.docker'
-                   sh 'cat $HARBOR_LOGIN > ~/.docker/config.json'
-                   sh 'kubectl config set-context --current --namespace=devteam1'
-                   sh '''
-                    if kp image list | grep -q petclinic; then
-                        echo "image exists patching..."
-                        kp image patch petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar -w
-                    else
-                        echo "creating image"
-                        kp image create petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar --tag dev.registry.pivotal.io/warroyo/petclinic -w
-                    fi
-                   '''
-               }
-                
+       stage('testing')
+       {
+           steps{
+            sh 'kubectl get pods -A'
            }
        }
-    //    stage('Publish') {
-    //        environment {
-    //            registryCredential = 'dockerhub'
-    //        }
-    //        steps{
-    //            script {
-    //                def appimage = docker.build registry + ":$BUILD_NUMBER"
-    //                docker.withRegistry( '', registryCredential ) {
-    //                    appimage.push()
-    //                    appimage.push('latest')
-    //                }
-    //            }
-    //        }
-    //    }
-    //    stage ('Deploy') {
+    //    stage('Build') {
     //        steps {
-    //            script{
-    //                def image_id = registry + ":$BUILD_NUMBER"
-    //                sh "ansible-playbook  playbook.yml --extra-vars \"image_id=${image_id}\""
+    //            git poll: true,
+    //                url: 'https://github.com/warroyo/spring-petclinic',
+    //                branch: 'main'
+    //            container('jdk') {
+    //             sh 'echo "building code"'
+    //             sh './mvnw package'
+    //             }
+    //        }    
+    //    }
+    //     stage('test') {
+    //        steps {
+    //            container('jdk') {
+    //             sh 'echo "running some tests"'
+    //             sh 'sleep 20'
+    //             sh 'echo "tests succesfully passed"'
+    //             }
+    //        }    
+    //    }
+    //    stage('Build Container') {
+    //        environment {
+    //         TBS_KUBE = credentials('tbs-kube')
+    //         TMC_API_TOKEN = credentials('tmc-token')
+    //         HARBOR_LOGIN = credentials('harbor')
+    //        }
+    //        steps {                
+    //            // Create our project directory.
+    //            container('jenkins-ci-image'){
+    //                sh 'mkdir -p ~/.kube'
+    //                sh 'cat $TBS_KUBE > ~/.kube/config'
+    //                sh 'mkdir -p ~/.docker'
+    //                sh 'cat $HARBOR_LOGIN > ~/.docker/config.json'
+    //                sh 'kubectl config set-context --current --namespace=devteam1'
+    //                sh '''
+    //                 if kp image list | grep -q petclinic; then
+    //                     echo "image exists patching..."
+    //                     kp image patch petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar -w
+    //                 else
+    //                     echo "creating image"
+    //                     kp image create petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar --tag dev.registry.pivotal.io/warroyo/petclinic -w
+    //                 fi
+    //                '''
     //            }
+                
     //        }
     //    }
+    //    stage('Deploy app'){
+    //     steps{
+    //         container('jenkins-ci-image'){
+    //             sh '''
+    //               image=kubectl get images petclinic -o jsonpath='{.status.latestImage}'
+
+    //               helm upgrade  --install --atomic --wait --set image.buildversion=${image}  petclinic ./chart/basic
+    //             '''
+    //         }
+    //     }
+    //    }
+    
    }
 }

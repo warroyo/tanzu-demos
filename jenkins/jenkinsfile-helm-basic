@@ -14,7 +14,7 @@ pipeline {
            steps {
                git poll: true,
                    url: 'https://github.com/warroyo/spring-petclinic',
-                   branch: main
+                   branch: 'main'
                container('maven') {
                 sh 'echo "building code"'
                 sh './mvnw package'

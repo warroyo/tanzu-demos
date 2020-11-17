@@ -4,7 +4,7 @@ pipeline {
         label 'helm-basic'  
         idleMinutes 5 
         yamlFile 'jenkins/build-pod-basic.yml' 
-        defaultContainer 'maven'
+        defaultContainer 'jenkins-ci-image'
       }
 
    }
@@ -15,9 +15,8 @@ pipeline {
                git poll: true,
                    url: 'https://github.com/warroyo/spring-petclinic',
                    branch: 'main'
-               container('maven') {
+               container('jdk') {
                 sh 'echo "building code"'
-                sh 'unset MAVEN_CONFIG '
                 sh './mvnw clean package'
                 }
            }    

@@ -24,7 +24,7 @@ pipeline {
         stage('test') {
            steps {
                container('maven') {
-                sh 'echo "running some tests'
+                sh 'echo "running some tests"'
                 sh 'sleep 20'
                 sh 'echo "tests succesfully passed"'
                 }

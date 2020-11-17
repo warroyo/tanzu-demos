@@ -11,4 +11,4 @@ spec:
       command: ["tail", "-f", "/dev/null"] 
       imagePullPolicy: Always
   imagePullSecrets:
-  - name: devregistry
+    - name: devregistry

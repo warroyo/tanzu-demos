@@ -1,4 +1,7 @@
 pipeline {
+   options {
+        ansiColor('xterm')
+    }
    agent {
        kubernetes {
         label 'helm-basic'  

@@ -43,10 +43,10 @@ pipeline {
                    sh '''
                     if kp image list | grep -q petclinic; then
                         echo "image exists patching..."
-                        kp image patch --local-path ./spring-petclinic/target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar
+                        kp image patch petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar
                     else
                         echo "creating image"
-                        kp image create test --local-path ./spring-petclinic/target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar --tag dev.registry.pivotal.io/warroyo/petclinic
+                        kp image create petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar --tag dev.registry.pivotal.io/warroyo/petclinic
                     fi
                    '''
                }

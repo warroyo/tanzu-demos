@@ -17,6 +17,7 @@ pipeline {
                    branch: 'main'
                container('maven') {
                 sh 'echo "building code"'
+                sh 'unset MAVEN_CONFIG '
                 sh './mvnw package'
                 }
            }    

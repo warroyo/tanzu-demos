@@ -34,7 +34,8 @@ pipeline {
            steps {                
                // Create our project directory.
                container('jenkins-ci-image'){
-                   sh '"cat $TBS_KUBE > ~/.kube/config"'
+                   sh 'mkdir -p ~/.kube'
+                   sh 'cat $TBS_KUBE > ~/.kube/config'
                    sh 'kp image list' 
                }
                 

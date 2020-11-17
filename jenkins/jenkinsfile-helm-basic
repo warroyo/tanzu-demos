@@ -6,11 +6,12 @@ pipeline {
         yamlFile 'jenkins/build-pod-basic.yml' 
         defaultContainer 'maven'
       }
-      environment {
+
+   }
+   environment {
         TBS_KUBE = credentials('tbs-kube')
         
     }
-   }
    stages {
        stage('Build') {
            steps {

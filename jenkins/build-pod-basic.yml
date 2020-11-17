@@ -3,7 +3,7 @@ kind: Pod
 spec:
   containers:
     - name: jdk
-      image: openjdk
+      image: openjdk:11
       command: ["tail", "-f", "/dev/null"] 
       imagePullPolicy: IfNotPresent
     - name: jenkins-ci-image

@@ -6,3 +6,7 @@ spec:
       image: maven:3.5.4-jdk-8-slim
       command: ["tail", "-f", "/dev/null"] 
       imagePullPolicy: IfNotPresent
+    - name: jenkins-ci-image
+      image: dev.registry.pivotal.io/warroyo/jenkins-ci-image
+      command: ["tail", "-f", "/dev/null"] 
+      imagePullPolicy: Always

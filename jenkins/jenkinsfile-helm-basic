@@ -6,34 +6,36 @@ pipeline {
         yamlFile 'jenkins/build-pod-basic.yml' 
         defaultContainer 'maven'
       }
+      environment {
+        TBS_KUBE = credentials('tbs-kube')
+        
+    }
    }
    stages {
        stage('Build') {
            steps {
                container('maven') {
-                sh 'echo MAVEN_CONTAINER_ENV_VAR = ${CONTAINER_ENV_VAR}'
-                sh 'mvn -version'
+                sh './mvnw package'
                 }
            }    
        }
-    //    stage('Test') {
-    //        agent {
-    //            docker {
-    //                image 'golang'
-    //            }
-    //        }
-    //        steps {                
-    //            // Create our project directory.
-    //            sh 'cd ${GOPATH}/src'
-    //            sh 'mkdir -p ${GOPATH}/src/hello-world'
-    //            // Copy all files in our Jenkins workspace to our project directory.               
-    //            sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
-    //            // Remove cached test results.
-    //            sh 'go clean -cache'
-    //            // Run Unit Tests.
-    //            sh 'go test ./... -v -short'           
-    //        }
-    //    }
+        stage('test') {
+           steps {
+               container('maven') {
+                sh 'echo "running some tests'
+                sh 'sleep 20'
+                sh 'echo "tests succesfully passed"'
+                }
+           }    
+       }
+       stage('Build Container') {
+           steps {                
+               // Create our project directory.
+               container(jenkins-ci-image)
+               sh 'echo $TBS_KUBE > ~/.kube/config'
+               sh 'kp image list'         
+           }
+       }
     //    stage('Publish') {
     //        environment {
     //            registryCredential = 'dockerhub'

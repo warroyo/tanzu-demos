@@ -34,8 +34,9 @@ pipeline {
            steps {                
                // Create our project directory.
                container(jenkins-ci-image)
-               sh '"cat $TBS_KUBE > ~/.kube/config"'
-               sh 'kp image list'         
+               sh 'printenv'
+            //    sh '"cat $TBS_KUBE > ~/.kube/config"'
+            //    sh 'kp image list'         
            }
        }
     //    stage('Publish') {

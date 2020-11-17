@@ -17,7 +17,7 @@ pipeline {
                    branch: 'main'
                container('jdk') {
                 sh 'echo "building code"'
-                sh './mvnw clean package'
+                sh './mvnw package'
                 }
            }    
        }

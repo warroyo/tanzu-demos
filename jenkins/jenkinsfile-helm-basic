@@ -16,7 +16,8 @@ pipeline {
        stage('Build') {
            steps {
                container('maven') {
-                sh './mvnw package'
+                sh 'echo building code'
+                // sh './mvnw package'
                 }
            }    
        }

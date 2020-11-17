@@ -12,9 +12,11 @@ pipeline {
    stages {
        stage('Build') {
            steps {
+               git poll: true,
+                   url: 'https://github.com/warroyo/spring-petclinic'
                container('maven') {
                 sh 'echo "building code"'
-                // sh './mvnw package'
+                sh './mvnw package'
                 }
            }    
        }
@@ -37,7 +39,15 @@ pipeline {
                container('jenkins-ci-image'){
                    sh 'mkdir -p ~/.kube'
                    sh 'cat $TBS_KUBE > ~/.kube/config'
-                   sh 'kp image list' 
+                   sh '''
+                    if kp image list | grep -q petclinic; then
+                        echo "image exists patching..."
+                        kp image patch --local-path ./spring-petclinic/target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar
+                    else
+                        echo "creating image"
+                        kp image create test --local-path ./spring-petclinic/target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar --tag dev.registry.pivotal.io/warroyo/petclinic
+                    fi
+                   '''
                }
                 
            }

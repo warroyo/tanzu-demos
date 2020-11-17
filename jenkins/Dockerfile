@@ -9,4 +9,7 @@ RUN apt-get update -y && apt-get install -y bash jq curl && \
     mv ./kubectl /usr/local/bin/kubectl && \
     curl -LO https://github.com/vmware-tanzu/kpack-cli/releases/download/v0.1.3/kp-linux-0.1.3 && \
     chmod +x ./kp-linux-0.1.3 && \
-    mv ./kp-linux-0.1.3 /usr/local/bin/kp
+    mv ./kp-linux-0.1.3 /usr/local/bin/kp && \
+    curl -LO https://vmware.bintray.com/tmc/0.2.0-001dbc95/linux/x64/tmc && \
+    chmod +x ./tmc && \
+    mv ./tmc /usr/local/bin/tmc

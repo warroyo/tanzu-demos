@@ -44,7 +44,6 @@ pipeline {
            }
            steps {                
                 container('jenkins-ci-image'){
-               script{
 
                     sh 'mkdir -p ~/.kube'
                     sh 'cat $TBS_KUBE > ~/.kube/config'
@@ -60,10 +59,12 @@ pipeline {
                     //         kp image create petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar --tag dev.registry.pivotal.io/warroyo/petclinic -w
                     //     fi
                     // '''
-                    env.IMAGE = sh(script: 'kubectl get images petclinic -o jsonpath={.status.latestImage}', returnStdout: true).trim()
-                    env.IMAGE = "testing"
-                    sh 'echo "latest image is: ${IMAGE}"'
+               script{
+
+                    IMAGE = sh(script: 'kubectl get images petclinic -o jsonpath={.status.latestImage}', returnStdout: true).trim()
                 }
+                    
+                    sh 'echo "latest image is: ${IMAGE}"'
 
                }
                 

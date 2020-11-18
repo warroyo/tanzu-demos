@@ -43,7 +43,6 @@ pipeline {
             HARBOR_LOGIN = credentials('harbor')
            }
            steps {                
-               script{
                 container('jenkins-ci-image'){
                     sh 'mkdir -p ~/.kube'
                     sh 'cat $TBS_KUBE > ~/.kube/config'
@@ -59,7 +58,8 @@ pipeline {
                             kp image create petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar --tag dev.registry.pivotal.io/warroyo/petclinic -w
                         fi
                     '''
-                    env.IMAGE = sh(script: 'kubectl get images petclinic -o jsonpath=\'{.status.latestImage}\'', returnStdout: true)
+               script{
+                    env.IMAGE = sh(script: "kubectl get images petclinic -o jsonpath='{.status.latestImage}'", returnStdout: true)
                 }
                }
                 
@@ -70,7 +70,7 @@ pipeline {
             container('jenkins-ci-image'){
                 sh 'rm ~/.kube/config'
                 sh '''
-                  helm upgrade  --install --atomic --wait --set image.image=${IMAGE}  petclinic ./chart/basic
+                  helm upgrade  --install --atomic --wait --set image.image=${IMAGE} -n default  petclinic ./chart/basic
                 '''
             }
         }

@@ -1,5 +1,6 @@
+latest_image = ''
+
 pipeline {
-    latest_image = ''
 
    options {
         ansiColor('xterm')

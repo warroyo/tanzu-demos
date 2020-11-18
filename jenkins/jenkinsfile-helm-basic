@@ -53,7 +53,7 @@ pipeline {
                     sh 'cat $HARBOR_LOGIN > ~/.docker/config.json'
                     sh 'kubectl config set-context --current --namespace=devteam1'
                     sh '''
-                        if kp image list | grep -q petclinic; then
+                        if kp image list | grep -Eq "^petclinic$"; then
                             echo "image exists patching..."
                             kp image patch petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar -w
                         else

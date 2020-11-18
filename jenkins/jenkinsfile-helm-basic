@@ -76,7 +76,7 @@ pipeline {
                 withEnv(["IMAGE=${latest_image}"]){
                 sh 'rm ~/.kube/config'
                 sh '''
-                  helm upgrade  --install --atomic --wait --set image.image=${IMAGE} -n default  petclinic ./chart/basic
+                  helm upgrade  --install --atomic --wait --set image.image=${IMAGE} -n default -f ./chart/basic/values.dev.yaml petclinic ./chart/basic
                 '''
                 }
             }

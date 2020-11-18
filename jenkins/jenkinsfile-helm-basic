@@ -1,6 +1,9 @@
 latest_image = ''
 
 pipeline {
+    triggers {
+     pollSCM '* * * * *'
+    }
 
    options {
         ansiColor('xterm')
@@ -18,9 +21,8 @@ pipeline {
    stages {
        stage('Build') {
            steps {
-               git poll: true,
-                   url: 'https://github.com/warroyo/spring-petclinic',
-                   branch: 'main'
+               checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: 'https://github.com/warroyo/spring-petclinic']],
+               branches: [[name: 'refs/heads/main']]], poll: true
                container('jdk') {
                 sh 'echo "building code"'
                 sh './mvnw package'

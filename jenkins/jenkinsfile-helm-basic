@@ -1,10 +1,9 @@
 pipeline {
+    latest_image = ''
+
    options {
         ansiColor('xterm')
     }
-  environment{
-      IMAGE = ''
-  }
    agent {
        kubernetes {
         label 'helm-basic'  
@@ -61,10 +60,11 @@ pipeline {
                     // '''
                script{
 
-                    IMAGE = sh(script: 'kubectl get images petclinic -o jsonpath={.status.latestImage}', returnStdout: true).trim()
+                    latest_image = sh(script: 'kubectl get images petclinic -o jsonpath={.status.latestImage}', returnStdout: true).trim()
                 }
-                    
-                    sh 'echo "latest image is: ${IMAGE}"'
+                    withEnv(["IMAGE=${latest_image}"{
+                    sh 'echo "latest image is: ${latest_image}"'
+                    }
 
                }
                 
@@ -73,11 +73,14 @@ pipeline {
        stage('Deploy app'){
         steps{
             container('jenkins-ci-image'){
+                withEnv(["IMAGE=${latest_image}"]){
                 sh 'rm ~/.kube/config'
                 sh '''
                   helm upgrade  --install --atomic --wait --set image.image=${IMAGE} -n default  petclinic ./chart/basic
                 '''
+                }
             }
+
         }
        }
     

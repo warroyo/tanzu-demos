@@ -61,6 +61,7 @@ pipeline {
                     //     fi
                     // '''
                     env.IMAGE = sh(script: 'kubectl get images petclinic -o jsonpath={.status.latestImage}', returnStdout: true).trim()
+                    env.IMAGE = "testing"
                     sh 'echo "latest image is: ${IMAGE}"'
                 }
 

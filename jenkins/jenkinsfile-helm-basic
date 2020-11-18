@@ -44,11 +44,11 @@ pipeline {
            }
            steps {                
                 container('jenkins-ci-image'){
-                    // sh 'mkdir -p ~/.kube'
-                    // sh 'cat $TBS_KUBE > ~/.kube/config'
+                    sh 'mkdir -p ~/.kube'
+                    sh 'cat $TBS_KUBE > ~/.kube/config'
                     // sh 'mkdir -p ~/.docker'
                     // sh 'cat $HARBOR_LOGIN > ~/.docker/config.json'
-                    // sh 'kubectl config set-context --current --namespace=devteam1'
+                    sh 'kubectl config set-context --current --namespace=devteam1'
                     // sh '''
                     //     if kp image list | grep -q petclinic; then
                     //         echo "image exists patching..."

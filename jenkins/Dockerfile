@@ -1,6 +1,6 @@
 FROM ubuntu:bionic
 
-RUN apt-get update -y && apt-get install -y bash jq curl && \
+RUN apt-get update -y && apt-get install -y bash jq curl libdigest-sha-perl && \
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
     chmod 700 get_helm.sh && \
     ./get_helm.sh && \
@@ -12,4 +12,5 @@ RUN apt-get update -y && apt-get install -y bash jq curl && \
     mv ./kp-linux-0.1.3 /usr/local/bin/kp && \
     curl -LO https://vmware.bintray.com/tmc/0.2.0-001dbc95/linux/x64/tmc && \
     chmod +x ./tmc && \
-    mv ./tmc /usr/local/bin/tmc
+    mv ./tmc /usr/local/bin/tmc && \
+    curl -L https://k14s.io/install.sh | bash

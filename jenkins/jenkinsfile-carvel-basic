@@ -65,8 +65,12 @@ pipeline {
            }
        }
        stage('Deploy app'){
+        environment {
+        HARBOR_LOGIN = credentials('harbor')
+        }
         steps{
             container('jenkins-ci-image'){
+                sh 'cat $HARBOR_LOGIN > ~/.docker/config.json'
                 sh 'rm ~/.kube/config'
                 sh '''
                 ytt -f ./carvel/basic/app -f ./carvel/basic/values.yaml -f ./carvel/basic/values.dev.yaml | kbld -f - | kapp -y deploy -a petclinic -f -

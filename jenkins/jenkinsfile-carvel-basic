@@ -73,7 +73,7 @@ pipeline {
                 sh 'cat $HARBOR_LOGIN > ~/.docker/config.json'
                 sh 'rm ~/.kube/config'
                 sh '''
-                ytt -f ./carvel/basic/app -f ./carvel/basic/values.yaml -f ./carvel/basic/values.dev.yaml | kbld -f - | kapp -y deploy -a petclinic -f -
+                ytt -f ./carvel/basic/app -f ./carvel/basic/values.yaml -f ./carvel/basic/values.dev.yaml | kbld -f - | kapp -y deploy -n default -a petclinic -f -
                 '''
                 }
 

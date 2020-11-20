@@ -1,1 +1,1 @@
-kubectl patch clusterstack full --type='json' -p='[{"op": "replace", "path": "/spec/runImage/image", "value":"dev.registry.pivotal.io/warroyo/build-service/run@sha256:fca60d5476d5a7dc75deb3c8dad59514994958b4d267160f238e120bf8d79dc7"}]'
+kubectl patch clusterstack full --type='json' -p='[{"op": "replace", "path": "/spec/runImage/image", "value":"dev.registry.pivotal.io/warroyo/build-service/run@sha256:a007dd49172dd89c790a095ec6b54291dcb7bed942dd0a8ffd0a8d0b77cb68b5"}]'

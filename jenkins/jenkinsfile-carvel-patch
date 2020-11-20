@@ -1,0 +1,111 @@
+
+pipeline {
+    triggers {
+     pollSCM '* * * * *'
+    }
+
+   options {
+        ansiColor('xterm')
+    }
+   agent {
+       kubernetes {
+        label 'carvel-basic'  
+        idleMinutes 5 
+        yamlFile 'jenkins/build-pod-basic.yml' 
+        defaultContainer 'jenkins-ci-image'
+      }
+
+   }
+   
+   stages {
+       stage('Checkout'){
+           steps{
+               checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: 'https://github.com/warroyo/spring-petclinic']],
+               branches: [[name: 'refs/heads/main']]], poll: true
+           }
+       }
+       stage('Build') {
+            when {
+                beforeAgent true
+                not {
+                    environment name: 'PATCH', value: 'true'
+                }
+            }
+           steps {
+               
+               container('jdk') {
+                sh 'echo "building code"'
+                sh './mvnw package'
+                }
+           }    
+       }
+        stage('test') {
+            when {
+                beforeAgent true
+                not {
+                    environment name: 'PATCH', value: 'true'
+                }
+            }
+           steps {
+               container('jdk') {
+                sh 'echo "running some tests"'
+                sh 'sleep 20'
+                sh 'echo "tests succesfully passed"'
+                }
+           }    
+       }
+       stage('Build Container') {
+            when {
+                beforeAgent true
+                not {
+                    environment name: 'patch', value: 'true'
+                }
+            }
+           environment {
+            TBS_KUBE = credentials('tbs-kube')
+            TMC_API_TOKEN = credentials('tmc-token')
+            HARBOR_LOGIN = credentials('harbor')
+           }
+           steps {                
+                container('jenkins-ci-image'){
+
+                    sh 'mkdir -p ~/.kube'
+                    sh 'cat $TBS_KUBE > ~/.kube/config'
+                    sh 'mkdir -p ~/.docker'
+                    sh 'cat $HARBOR_LOGIN > ~/.docker/config.json'
+                    sh 'kubectl config set-context --current --namespace=devteam1'
+                    sh '''
+                        if kp image status petclinic; then
+                            echo "image exists patching..."
+                            kp image patch petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar -w
+                        else
+                            echo "creating image"
+                            kp image create petclinic --local-path ./target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar --tag dev.registry.pivotal.io/warroyo/petclinic -w
+                        fi
+                    '''
+               }
+                
+           }
+       }
+       stage('Deploy app'){
+    
+            environment {
+            HARBOR_LOGIN = credentials('harbor')
+            }
+            steps{
+                container('jenkins-ci-image'){
+                    sh '''
+
+                    '''
+                    sh 'cat $HARBOR_LOGIN > ~/.docker/config.json'
+                    sh 'rm ~/.kube/config'
+                    sh '''
+                    ytt -f ./carvel/basic/app -f ./carvel/basic/values.yaml -f ./carvel/basic/values.dev.yaml | kbld -f - | kapp -y deploy -n default -a petclinic -f -
+                    '''
+                    }
+
+            }
+        }
+    
+   }
+}

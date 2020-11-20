@@ -34,11 +34,11 @@ pe 'bat build1 build2'
 pe 'diff build1 build2'
 
 pe 'kp clusterstack update full \
-   --build-image registry.pivotal.io/tbs-dependencies/build-full@sha256:ef09483901fec54c83c41a67e35e80d79450b1fdc0da7375b17bd93fd9a4a96c \
-   --run-image registry.pivotal.io/tbs-dependencies/run-full@sha256:a007dd49172dd89c790a095ec6b54291dcb7bed942dd0a8ffd0a8d0b77cb68b5'
+   --build-image registry.pivotal.io/tbs-dependencies/build-full@sha256:5c4370ff05762de1f0376700abc3a4e2f6bc4fc1fe50eb6c03f6a62be89eb30b \
+   --run-image registry.pivotal.io/tbs-dependencies/run-full@sha256:4e5fc822ef0edcdef513a6a979ee3e49df5b1849568fe0b3aa30eb5a6d557e95'
 
 #hack until bug is fixed
-kubectl patch clusterstack full --type='json' -p='[{"op": "replace", "path": "/spec/runImage/image", "value":"dev.registry.pivotal.io/warroyo/build-service/run@sha256:a007dd49172dd89c790a095ec6b54291dcb7bed942dd0a8ffd0a8d0b77cb68b5"}]'
+kubectl patch clusterstack full --type='json' -p='[{"op": "replace", "path": "/spec/runImage/image", "value":"dev.registry.pivotal.io/warroyo/build-service/run@sha256:4e5fc822ef0edcdef513a6a979ee3e49df5b1849568fe0b3aa30eb5a6d557e95"}]'
 
 
 
